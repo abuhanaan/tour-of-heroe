@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MessageService } from './message.service';
 import { Hero } from 'src/hero';
 import { HEROES } from 'src/mock-heroes';
@@ -9,7 +10,15 @@ import { HEROES } from 'src/mock-heroes';
 })
 export class HeroService {
 
-  constructor(private messageService: MessageService) { }
+  // URL to web api
+  private heroesUrl = 'api/heroes'
+
+  constructor(private messageService: MessageService, private http: HttpClient) { }
+
+  // Log a HeroService message with the MessageService
+  private log(message: string) {
+    this.messageService.add(`HeroService: ${message}`);
+  }
 
   getHeroes(): Observable<Hero[]>{
     // works asynchronously
