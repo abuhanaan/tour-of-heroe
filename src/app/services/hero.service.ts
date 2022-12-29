@@ -84,4 +84,21 @@ private handleError<T>(operation = 'operation', result?: T) {
       catchError(this.handleError<Hero>('deleteHero'))
     )
   }
+
+  /* GET heroes whose name contains search term */
+  searchHero(term: string): Observable<Hero[]> {
+    term = term.trim()
+    // if not serach term, return empty hero array
+    if (!term) {
+      return of([])
+    }
+    return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
+      tap(x => {
+        return x.length ?
+          this.log(`found heroes matching "${term}"`) :
+          this.log(`no heroes matching "${term}"`)
+      }),
+      catchError(this.handleError<Hero[]>('searchHeroes', []))
+    )
+  }
 }
