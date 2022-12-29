@@ -21,10 +21,9 @@ export class HeroService {
   }
 
   getHeroes(): Observable<Hero[]>{
-    // works asynchronously
-    const heroes = of(HEROES)
+    // now works asynchronously with Http
     this.messageService.add('HeroService: fetched heroes')
-    return heroes
+    return this.http.get<Hero[]>(this.heroesUrl)
   }
 
   getHero(id: number): Observable<Hero> {
