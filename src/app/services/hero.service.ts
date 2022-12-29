@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { NotFoundError, Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { MessageService } from './message.service';
@@ -52,8 +52,10 @@ private handleError<T>(operation = 'operation', result?: T) {
 }
 
   getHero(id: number): Observable<Hero> {
-    const hero = HEROES.find((myHero) => myHero.id === id)!
-    this.messageService.add(`HeroService: fetched hero id=${id}`)
-    return of(hero)
+    const url = `${this.heroesUrl}/${id}`
+    return this.http.get<Hero>(url).pipe(
+      tap(_ => this.log('`fetched hero id=${id}`')),
+      catchError(this.handleError<Hero>(`getHero id=${id}`))
+    )
   }
 }
